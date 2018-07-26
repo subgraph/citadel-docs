@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<html lang="{{ language }}" class="sidebar-visible citadel">
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ title }}</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="{{ description }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <base href="{{ path_to_root }}">
+        <link rel="shortcut icon" href="{{ favicon }}">
+        <link rel="stylesheet" href="book.css">
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="highlight.css">
+        {{#each additional_css}}
+        <link rel="stylesheet" href="{{this}}">
+        {{/each}}
+    </head>
+    <body class="citadel">
+        <script type="text/javascript">
+            try {
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            {{#toc}}{{/toc}}
+        </nav>
+        <div id="page-wrapper" class="page-wrapper">
+            <div class="page">
+                {{> header}}
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            {{#if search_enabled}}
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            {{/if}}
+                        </div>
+                        <h1 class="menu-title"></h1>
+                        <div class="right-buttons">
+                            <button id="edit-button" class="icon-button"
+                                type="button" title="Fork & Edit Page"
+                                aria-label="Fork & Edit Page" aria-haspopup="true" aria-expanded="false" aria-controls="edit">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {{#if search_enabled}}
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                {{/if}}
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                    document.getElementById("edit-button").addEventListener("click", function(){
+                        var editWindow = window.open("https://github.com/subgraph/citadel-docs/edit/master/src/{{ path }}");
+                    });
+                </script>
+                <div id="content" class="content">
+                    <main>
+                        {{{ content }}}
+                    </main>
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        {{#previous}}
+                        <a rel="prev" href="{{link}}" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <i class="fa fa-angle-left"></i>
+                        </a>
+                        {{/previous}}
+                        {{#next}}
+                        <a rel="next" href="{{link}}" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                        {{/next}}
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                {{#previous}}
+                <a href="{{link}}" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                {{/previous}}
+                {{#next}}
+                <a href="{{link}}" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                {{/next}}
+            </nav>
+        </div>
+        {{#if livereload}}
+        <script type="text/javascript">
+            var socket = new WebSocket("{{{livereload}}}");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload(true);
+                }
+            };
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+	    </script>
+        {{/if}}
+        {{#if search_enabled}}
+        <script src="searchindex.js" type="text/javascript" charset="utf-8"></script>
+        {{/if}}
+        {{#if search_js}}
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        {{/if}}
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+        {{#if is_print}}
+        <script type="text/javascript">
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+        {{/if}}
+    </body>
+</html>

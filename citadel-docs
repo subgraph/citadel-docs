@@ -1,0 +1,57 @@
+#! /usr/bin/gjs
+
+imports.gi.versions.Gtk = '3.0';
+
+const GLib = imports.gi.GLib;
+const Gtk = imports.gi.Gtk;
+const Gdk = imports.gi.Gdk;
+const Lang = imports.lang;
+const Webkit2 = imports.gi.WebKit2;
+
+const CitadelDocs = new Lang.Class({
+    Name: 'Citadel Documentation',
+    _init: function() {
+        this.application = new Gtk.Application();
+        this.application.connect('activate', Lang.bind(this, this._onActivate));
+        this.application.connect('startup', Lang.bind(this, this._onStartup));
+    },
+    _onActivate: function() {
+        this._window.present();
+    },
+    _onStartup: function() {
+        this._buildUI();
+    },
+    _buildUI: function() {
+
+        this._window = new Gtk.ApplicationWindow({
+            application: this.application,
+            title: "Citadel Documentation",
+            default_height: 700,
+            default_width: 1024,
+            window_position: Gtk.WindowPosition.CENTER
+        });
+
+        this._webView = new Webkit2.WebView();
+	    this._webView.enable_javascript = true;
+        this._webView.load_uri(GLib.filename_to_uri(
+            GLib.get_current_dir() + "/book/index.html",
+            null
+        ));
+
+        this._window.add(this._webView);
+        this._window.show_all();
+        this._window.set_icon_from_file("icon.png");
+
+        this._window.connect('destroy', function() {
+            Gtk.main_quit()
+        });
+    },
+    _fullScreen: function() {
+        screen = Gdk.Screen.get_default();
+        print("screen width: " + screen.get_width());
+        print("screen height: " + screen.get_height());
+    }
+});
+
+let app = new CitadelDocs();
+app.application.run(ARGV);

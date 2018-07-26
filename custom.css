@@ -1,0 +1,25 @@
+body {
+	background-color: #263238;
+	color: #FFFFFF;
+	font-family: Roboto, NotoSans, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+	font-family: Roboto, NotoSans, sans-serif;
+	font-weight: 900;
+}
+
+/*
+Primary color for 'selected-items' (Default: #00BCD4 = Cyan500, type: string)
+Secondary color for notifications and OSDs (Default: #4DB6AC = Teal300, type: string)
+Secondary color for 'suggested' buttons (Default: #009688 = Teal500, type: string)
+Tertiary color for 'destructive' buttons (Default: #FF5252 = RedA200, type: string)
+*/
+
+a {
+	color: #00BCD4;
+}
