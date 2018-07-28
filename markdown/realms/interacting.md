@@ -17,7 +17,17 @@ citadel:~ $ realms
    work
 ```` 
 
-To perform any actions
+
+By typing `realms help` you can see a list of all the commands available that
+control your realms.
+
+To perform any actions like starting or stoping realms, you need to become root.
+Then you can type commands like `stop`
+
+```shell
+$ su
+# realms stop main
+```
 
 ### The `default` realm
 

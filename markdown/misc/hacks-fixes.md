@@ -1,4 +1,4 @@
-# Miscellaneous Hacks
+# Hacks & Fixes
 
 The following are various hack fixes to issues you may encounter that we are
 aware of an working towards resolving.
@@ -13,13 +13,12 @@ dpkg: error while cleaning up:
  unable to remove newly-extracted version of '/usr/share/themes/Default/gtk-2.0-key/gtkrc': Read-only file system
 ```
 
-A hacky fix to this is to do the following for each directory containing files
-that throw the above error
+A hacky fix to do the following for each directory containing files that throw 
+the above error from the `Terminal` for that realm.
 
 ```shell
-sudo mount -ttmpfs tmpfs /usr/share/themes/Default/gtk-2.0/
+$ sudo mount -ttmpfs tmpfs /usr/share/themes/Default/gtk-2.0/
 ```
-
 
 ## Missing App Icons
 

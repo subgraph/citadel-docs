@@ -23,19 +23,25 @@ The realms base directory is stored on the storage partition at `/storage/realms
     /realm-testing
 ```
 
-#### File `/realms/config`
+#### Config File 
+
+`/realms/config`
 
 This file is a template of the configuration file for individual realms. When a new
 realm is created this file in copied into the new realm instance directory. By
 modifying this file, the default configuration for new realm instances can be changed.
 
-#### Directory `/realms/Shared`
+#### Shared Directory 
+
+`/realms/Shared`
 
 This directory is bind mounted to `/home/user/Shared` of each running realm that has
 the option `use-shared-dir` enabled.  It's a convenient way to move files between
 different realms and between citadel and realms.
 
-#### Directory `/realms/skel`
+#### Skel Directory 
+
+`/realms/skel`
 
 Files which are added to this directory will be copied into the home directory of
 any newly created realm.  The directory is copied as a tree of files and may contain
@@ -45,33 +51,43 @@ subdirectories. After moving files into the `/realms/skel` you should set the pe
 chown 1000:1000 ,dotfile
 ```
 
-#### Symlink `/realms/default.realm`
+#### Default Symlink 
+
+`/realms/default.realm`
 
 A symlink which points to a realm instance directory of the default realm.  The
 default realm is the realm which starts when the system is booted.
 
-#### Directory `/realms/realm-$name`
+#### Realm Directory
 
-This is a realm instance directory, for a realm with $name as the realm name.
+`/realms/realm-main`
+
+This is a realm instance directory, for a realm with `main` as the realm name.
 
 ```shell
-/realm-main
+/realms/realm-main
     config
     /home
     /rootfs
 ```
 
- ##### `config`
+```shell
+config
+```
 
 Configuration file for the realm instance copied from `/realms/config` or
 created by the user.
 
-##### `/home`
+```shell
+home
+```
 
 Home directory for this realm. It will be mounted to `/home/user` in
 the realm instance.
 
-##### `/rootfs`
+```shell
+rootfs
+```
 
-The root filesystem of this realm. It is cloned from (a btrfs subvolume snapshot of)
-some application image.
+The root filesystem of this realm. It is cloned from (a btrfs subvolume snapshot
+of) some application image.
